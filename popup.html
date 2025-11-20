@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    body {
+      width: 200px;
+      padding: 10px;
+      font-family: Arial, sans-serif;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    .status {
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .on {
+      color: green;
+    }
+
+    .off {
+      color: red;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="status" class="status off">Adblock: OFF</div>
+  <div id="stats" style="text-align: center; margin: 10px 0; font-size: 12px; color: #666;">No ads blocked</div>
+  <button id="toggleBtn">Enable Adblock</button>
+  <script src="popup.js"></script>
+</body>
+
+</html>
