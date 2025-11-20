@@ -1,4 +1,4 @@
-# 🚫 Cloudflare Adblock Extension
+# 🚫 Adblock Extension
 
 Chrome extension for blocking ads using declarativeNetRequest API. Fast, lightweight, and privacy-focused.
 
