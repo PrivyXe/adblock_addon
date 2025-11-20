@@ -14,7 +14,7 @@ Chrome extension for blocking ads using declarativeNetRequest API. Fast, lightwe
 
 1. Clone this repository
 ```bash
-git clone https://github.com/yourusername/adblock.git
+git clone https://github.com/PrivyXe/adblock.git
 cd adblock
 ```
 
