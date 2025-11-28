@@ -19,11 +19,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // İstatistikleri yükle
     function loadStats() {
-        chrome.runtime.sendMessage({ action: "getStats" }, (response) => {
-            if (response) {
-                updateUI(response.enabled, response.blockedCount);
-            }
-        });
+        try {
+            chrome.runtime.sendMessage({ action: "getStats" }, (response) => {
+                if (chrome.runtime.lastError) {
+                    console.warn("Background connection failed:", chrome.runtime.lastError.message);
+                    // Fallback: Storage'dan oku ama background çalışmıyorsa buton işlevsiz olabilir
+                    chrome.storage.local.get(["adblockEnabled"], (result) => {
+                        updateUI(result.adblockEnabled !== false, 0);
+                    });
+                    return;
+                }
+                if (response) {
+                    updateUI(response.enabled, response.blockedCount);
+                }
+            });
+        } catch (e) {
+            console.error("SendMessage threw:", e);
+        }
     }
 
     // Başlangıç durumunu yükle
@@ -33,10 +45,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Toggle butonu
     toggleBtn.addEventListener('click', () => {
-        chrome.storage.local.get(["adblockEnabled"], (result) => {
-            const newState = !result.adblockEnabled;
-            chrome.runtime.sendMessage({ action: "toggleAdblock", enabled: newState });
-            setTimeout(loadStats, 100);
+        chrome.runtime.sendMessage({ action: "getStats" }, (response) => {
+            if (chrome.runtime.lastError) {
+                console.error("Cannot toggle, background not ready:", chrome.runtime.lastError.message);
+                alert("Extension background service is not ready. Please reload the extension.");
+                return;
+            }
+            if (response) {
+                const newState = !response.enabled;
+                chrome.runtime.sendMessage({ action: "toggleAdblock", enabled: newState });
+                setTimeout(loadStats, 50);
+            }
         });
     });
 
