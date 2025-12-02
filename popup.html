@@ -4,38 +4,217 @@
 <head>
   <style>
     body {
-      width: 200px;
-      padding: 10px;
-      font-family: Arial, sans-serif;
+      width: 320px;
+      padding: 0;
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f5f5;
     }
 
-    button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      cursor: pointer;
-    }
-
-    .status {
+    .header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 15px;
       text-align: center;
+    }
+
+    .header h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .tabs {
+      display: flex;
+      background-color: #fff;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s;
+    }
+
+    .tab.active {
+      border-bottom: 2px solid #3498db;
+      color: #3498db;
+      font-weight: bold;
+    }
+
+    .content {
+      padding: 15px;
+      display: none;
+    }
+
+    .content.active {
+      display: block;
+    }
+
+    /* Dashboard Styles */
+    .status-card {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .status-text {
+      font-size: 16px;
       font-weight: bold;
       margin-bottom: 10px;
     }
 
-    .on {
-      color: green;
+    .status-text.on {
+      color: #27ae60;
     }
 
-    .off {
-      color: red;
+    .status-text.off {
+      color: #c0392b;
+    }
+
+    .toggle-btn {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    .toggle-btn.on {
+      background-color: #c0392b;
+      color: white;
+    }
+
+    .toggle-btn.off {
+      background-color: #27ae60;
+      color: white;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .stat-box {
+      background: white;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-number {
+      font-size: 24px;
+      font-weight: bold;
+      color: #3498db;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #7f8c8d;
+    }
+
+    /* Settings Styles */
+    .input-group {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 15px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .add-btn {
+      padding: 8px 15px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .rules-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .rule-item {
+      background: white;
+      padding: 10px;
+      margin-bottom: 5px;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid #eee;
+    }
+
+    .delete-btn {
+      color: #c0392b;
+      cursor: pointer;
+      font-weight: bold;
+      border: none;
+      background: none;
     }
   </style>
 </head>
 
 <body>
-  <div id="status" class="status off">Adblock: OFF</div>
-  <div id="stats" style="text-align: center; margin: 10px 0; font-size: 12px; color: #666;">No ads blocked</div>
-  <button id="toggleBtn">Enable Adblock</button>
+  <div class="header">
+    <h2>ProBlock</h2>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="dashboard">Dashboard</div>
+    <div class="tab" data-tab="settings">Settings</div>
+  </div>
+
+  <!-- Dashboard Tab -->
+  <div id="dashboard" class="content active">
+    <div class="status-card">
+      <div id="statusText" class="status-text on">Protection Active</div>
+      <button id="toggleBtn" class="toggle-btn on">Disable Protection</button>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div id="todayCount" class="stat-number">0</div>
+        <div class="stat-label">Blocked Today</div>
+      </div>
+      <div class="stat-box">
+        <div id="monthCount" class="stat-number">0</div>
+        <div class="stat-label">Blocked This Month</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Tab -->
+  <div id="settings" class="content">
+    <div class="input-group">
+      <input type="text" id="domainInput" placeholder="example.com">
+      <button id="addBtn" class="add-btn">Add</button>
+    </div>
+    <div style="font-size: 12px; color: #666; margin-bottom: 10px;">Custom Blocked Domains:</div>
+    <ul id="rulesList" class="rules-list">
+      <!-- Rules will be added here -->
+    </ul>
+  </div>
+
   <script src="popup.js"></script>
 </body>
 

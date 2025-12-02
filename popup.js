@@ -1,64 +1,144 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const statusDiv = document.getElementById('status');
+    // Elements
+    const tabs = document.querySelectorAll('.tab');
+    const contents = document.querySelectorAll('.content');
+    const statusText = document.getElementById('statusText');
     const toggleBtn = document.getElementById('toggleBtn');
-    const statsDiv = document.getElementById('stats');
+    const todayCountEl = document.getElementById('todayCount');
+    const monthCountEl = document.getElementById('monthCount');
+    const domainInput = document.getElementById('domainInput');
+    const addBtn = document.getElementById('addBtn');
+    const rulesList = document.getElementById('rulesList');
 
-    function updateUI(enabled, blockedCount = 0) {
-        if (enabled) {
-            statusDiv.textContent = "Adblock: ON";
-            statusDiv.className = "status on";
-            toggleBtn.textContent = "Disable Adblock";
-            statsDiv.textContent = `Blocked: ${blockedCount} ads`;
-        } else {
-            statusDiv.textContent = "Adblock: OFF";
-            statusDiv.className = "status off";
-            toggleBtn.textContent = "Enable Adblock";
-            statsDiv.textContent = "No ads blocked";
-        }
-    }
+    // Tab Switching
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            contents.forEach(c => c.classList.remove('active'));
 
-    // İstatistikleri yükle
-    function loadStats() {
-        try {
-            chrome.runtime.sendMessage({ action: "getStats" }, (response) => {
-                if (chrome.runtime.lastError) {
-                    console.warn("Background connection failed:", chrome.runtime.lastError.message);
-                    // Fallback: Storage'dan oku ama background çalışmıyorsa buton işlevsiz olabilir
-                    chrome.storage.local.get(["adblockEnabled"], (result) => {
-                        updateUI(result.adblockEnabled !== false, 0);
-                    });
-                    return;
-                }
-                if (response) {
-                    updateUI(response.enabled, response.blockedCount);
-                }
-            });
-        } catch (e) {
-            console.error("SendMessage threw:", e);
-        }
-    }
-
-    // Başlangıç durumunu yükle
-    chrome.storage.local.get(["adblockEnabled"], (result) => {
-        loadStats();
+            tab.classList.add('active');
+            document.getElementById(tab.dataset.tab).classList.add('active');
+        });
     });
 
-    // Toggle butonu
+    // Helper: Get Today's Date YYYY-MM-DD
+    function getTodayString() {
+        return new Date().toISOString().split('T')[0];
+    }
+
+    // Helper: Get Current Month YYYY-MM
+    function getMonthString() {
+        return new Date().toISOString().slice(0, 7);
+    }
+
+    // Update Dashboard UI
+    function updateDashboard() {
+        chrome.runtime.sendMessage({ action: "getStats" }, (response) => {
+            if (chrome.runtime.lastError || !response) return;
+
+            const { enabled, dailyStats } = response;
+
+            // Status
+            if (enabled) {
+                statusText.textContent = "Protection Active";
+                statusText.className = "status-text on";
+                toggleBtn.textContent = "Disable Protection";
+                toggleBtn.className = "toggle-btn on";
+            } else {
+                statusText.textContent = "Protection Disabled";
+                statusText.className = "status-text off";
+                toggleBtn.textContent = "Enable Protection";
+                toggleBtn.className = "toggle-btn off";
+            }
+
+            // Stats
+            const today = getTodayString();
+            const currentMonth = getMonthString();
+
+            let todayCount = dailyStats[today] || 0;
+            let monthCount = 0;
+
+            Object.keys(dailyStats).forEach(date => {
+                if (date.startsWith(currentMonth)) {
+                    monthCount += dailyStats[date];
+                }
+            });
+
+            todayCountEl.textContent = todayCount;
+            monthCountEl.textContent = monthCount;
+        });
+    }
+
+    // Update Settings UI
+    function updateSettings() {
+        chrome.runtime.sendMessage({ action: "getCustomRules" }, (response) => {
+            if (chrome.runtime.lastError || !response) return;
+
+            rulesList.innerHTML = '';
+            response.rules.forEach(rule => {
+                const li = document.createElement('li');
+                li.className = 'rule-item';
+                li.innerHTML = `
+                    <span>${rule.domain}</span>
+                    <button class="delete-btn" data-id="${rule.id}">×</button>
+                `;
+                rulesList.appendChild(li);
+            });
+
+            // Add delete listeners
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = parseInt(e.target.dataset.id);
+                    deleteRule(id);
+                });
+            });
+        });
+    }
+
+    // Actions
     toggleBtn.addEventListener('click', () => {
         chrome.runtime.sendMessage({ action: "getStats" }, (response) => {
-            if (chrome.runtime.lastError) {
-                console.error("Cannot toggle, background not ready:", chrome.runtime.lastError.message);
-                alert("Extension background service is not ready. Please reload the extension.");
-                return;
-            }
             if (response) {
-                const newState = !response.enabled;
-                chrome.runtime.sendMessage({ action: "toggleAdblock", enabled: newState });
-                setTimeout(loadStats, 50);
+                chrome.runtime.sendMessage({
+                    action: "toggleAdblock",
+                    enabled: !response.enabled
+                }, () => {
+                    setTimeout(updateDashboard, 50);
+                });
             }
         });
     });
 
-    // İstatistikleri her 1 saniyede güncelle
-    setInterval(loadStats, 1000);
+    addBtn.addEventListener('click', () => {
+        const domain = domainInput.value.trim();
+        if (domain) {
+            chrome.runtime.sendMessage({
+                action: "addCustomRule",
+                domain: domain
+            }, (response) => {
+                if (response && response.success) {
+                    domainInput.value = '';
+                    updateSettings();
+                }
+            });
+        }
+    });
+
+    function deleteRule(id) {
+        chrome.runtime.sendMessage({
+            action: "removeCustomRule",
+            id: id
+        }, (response) => {
+            if (response && response.success) {
+                updateSettings();
+            }
+        });
+    }
+
+    // Initial Load
+    updateDashboard();
+    updateSettings();
+
+    // Refresh stats periodically
+    setInterval(updateDashboard, 1000);
 });

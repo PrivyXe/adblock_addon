@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
-    "name": "Cloudflare Adblock",
-    "version": "1.0",
+    "name": "ProBlock",
+    "version": "1.1",
     "description": "Chrome extension for blocking ads using declarativeNetRequest API",
     "permissions": [
         "declarativeNetRequest",
