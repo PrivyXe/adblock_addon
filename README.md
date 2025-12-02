@@ -42,15 +42,11 @@ cd adblock
 adblock/
 ├── extension/           # Chrome extension files
 │   ├── manifest.json   # Extension manifest (V3)
-│   ├── background.js   # Service worker
+│   ├── background.js   # Service
 │   ├── popup.html      # Extension popup UI
 │   ├── popup.js        # Popup logic
 │   ├── rules.json      # Ad blocking rules
 │   └── icons/          # Extension icons
-└── worker/             # Optional Cloudflare Worker
-    └── src/
-        └── index.js    # Worker script
-```
 
 ## 🔧 Adding Custom Domains
 
