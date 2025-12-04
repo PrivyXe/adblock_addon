@@ -1,13 +1,15 @@
 {
     "manifest_version": 3,
     "name": "ProBlock",
-    "version": "1.1",
-    "description": "Chrome extension for blocking ads using declarativeNetRequest API",
+    "version": "2.0",
+    "description": "Advanced ad blocker with network statistics and page scanning",
     "permissions": [
         "declarativeNetRequest",
         "declarativeNetRequestFeedback",
         "storage",
-        "tabs"
+        "tabs",
+        "activeTab",
+        "scripting"
     ],
     "host_permissions": [
         "<all_urls>"
@@ -24,6 +26,17 @@
     "background": {
         "service_worker": "background.js"
     },
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "run_at": "document_idle"
+        }
+    ],
     "action": {
         "default_popup": "popup.html",
         "default_icon": {
