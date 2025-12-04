@@ -50,7 +50,7 @@
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/PrivyXe/ProBlock.git
+   git clone https://github.com/PrivyXe/adblock_addon.git
    ```
 
 2. **Open Chrome Extensions**
@@ -187,3 +187,4 @@ If this project helped you, please give it a ⭐ on GitHub!
 **Made with ❤️ for a cleaner web experience**
 
 </div>
+
