@@ -1,164 +1,123 @@
-# 🛡️ ProBlock - Advanced Ad Blocker
+# 🛡️ ProBlock - Advanced Ad & Tracker Blocker
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/version-2.0-blue.svg)
-![License](https://img.shields.io/badge/license-MIT-green.svg)
-![Chrome](https://img.shields.io/badge/Chrome-Extension-yellow.svg)
-![Manifest](https://img.shields.io/badge/Manifest-V3-orange.svg)
+[![Version](https://img.shields.io/badge/Version-4.0-blue?style=for-the-badge&logo=google-chrome)](https://github.com/PrivyXe/adblock_addon/releases)
+[![Manifest V3](https://img.shields.io/badge/Manifest-V3-orange?style=for-the-badge&logo=google-chrome)](https://developer.chrome.com/docs/extensions/mv3/intro/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+[![Privacy Focused](https://img.shields.io/badge/Privacy-Focused-red?style=for-the-badge&logo=shield)](CONTRIBUTING.md)
 
-**A powerful Chrome extension for blocking ads, trackers, and analytics scripts.**
+**Reclaim your browsing experience. Block ads, disable trackers, and skip video interruptions automatically.**
 
-[Features](#-features) • [Installation](#-installation) • [Usage](#-usage) • [Screenshots](#-screenshots) • [Contributing](#-contributing)
+[Key Features](#-key-features) • [Installation](#-installation) • [YouTube Protection](#-youtube-protection) • [Privacy](#-privacy--security) • [Contributing](#-contributing) 
 
 </div>
 
 ---
 
-## ✨ Features
+## 🚀 Overview
 
-### 🚫 Comprehensive Ad Blocking
-- **120+ blocking rules** covering major ad networks
-- Blocks ads from Google, Facebook, Amazon, Twitter, TikTok, and more
-- Stops video ads, pop-ups, and banner advertisements
+**ProBlock** is a high-performance Chrome extension designed to provide a cleaner, faster, and safer web experience. Built continuously on the modern **Manifest V3** platform, it leverages the `declarativeNetRequest` API to block ads at the network level before they load, ensuring minimal impact on browser performance.
 
-### 📊 Real-time Statistics
-- Track blocked ads **daily** and **monthly**
-- View **top blocked networks** with visual charts
-- See which ad networks are most active
+Beyond standard ad blocking, ProBlock includes a dedicated **YouTube Ad Skipper**, real-time page scanning for invisible trackers, and a comprehensive dashboard to visualize what's being blocked.
 
-### 🔍 Page Scanner
-- **Detect ad networks** on any webpage in real-time
-- Identify scripts, iframes, and tracking pixels
-- **One-click blocking** for detected networks
+## ✨ Key Features
 
-### ⚙️ Custom Rules
-- Add your own domains to block
-- Manage and remove custom rules easily
-- Persistent storage across sessions
+### 🛡️ Enterprise-Grade Blocking
+- **Network-Level Blocking**: Stops ads and trackers before they even download using 120+ optimized rule sets.
+- **Universal Coverage**: effectively blocks content on major platforms including Google, Facebook, Amazon, Twitter/X, and TikTok.
+- **Resource Saver**: Reduces data usage and speeds up page load times by preventing heavy ad media from loading.
 
-### 🎨 Modern UI
-- Beautiful dark theme design
-- Smooth animations and transitions
-- Clean, intuitive interface
+### 🎥 Specialized YouTube Protection
+ProBlock goes beyond simple blocking for streaming sites:
+- **Auto-Skip Video Ads**: Instantly skips pre-roll and mid-roll video ads.
+- **Ad Acceleration**: If an ad cannot be skipped, it is sped up to 8x speed and muted.
+- **Clean UI**: Hides banner ads, sponsored cards, and "Promoted" videos from the homepage and sidebar.
+
+### 🔍 Advanced Page Scanner
+- **Deep Scan**: Analyzes the current page DOM for inserted tracking scripts, invisible pixels, and malicious iframes.
+- **Visual Feedback**: Instantly see a list of all detected trackers on the active tab.
+- **One-Click Block**: Easily add any detected domain to your personal blocklist.
+
+### 📊 Insightful Dashboard
+- **Real-Time Stats**: Monitor daily and monthly blocked items.
+- **Visual Analytics**: Interactive charts showing top blocked ad networks.
+- **Control Center**: Toggle protection globally or for specific sites with a single switch.
 
 ---
 
 ## 📦 Installation
 
-### From Source (Developer Mode)
+ProBlock is currently available for *Developer Preview* installation.
 
-1. **Clone the repository**
+### Prerequisites
+- Google Chrome (Version 88+)
+- Git (optional, for cloning)
+
+### Steps
+
+1. **Download the Source**
    ```bash
    git clone https://github.com/PrivyXe/adblock_addon.git
+   # OR download the ZIP from the specific repository
    ```
 
-2. **Open Chrome Extensions**
-   - Navigate to `chrome://extensions/`
-   - Enable **Developer mode** (toggle in top right)
+2. **Open Extension Management**
+   - Type `chrome://extensions/` in your address bar.
+   - Toggle **Developer mode** on the top right corner.
 
-3. **Load the extension**
-   - Click **Load unpacked**
-   - Select the cloned `ProBlock` folder
+3. **Load the Extension**
+   - Click the **Load unpacked** button.
+   - Navigate to the `ProBlock` directory (ensure it contains `manifest.json`).
+   - Select the folder.
 
-4. **Done!** The extension icon will appear in your toolbar
-
----
-
-## 🚀 Usage
-
-### Dashboard
-- View protection status (Active/Disabled)
-- Toggle protection on/off
-- See blocked ads count (today & this month)
-- Monitor top blocked ad networks
-
-### Detected Tab
-- Scans current page for ad networks
-- Shows detected trackers and scripts
-- Click **Block** to add to custom rules
-- **Rescan** button to refresh results
-
-### Settings Tab
-- Add custom domains to block
-- View and manage blocked domains
-- Reset all statistics
+4. **Pin & Browse**
+   - Pin the ProBlock shield icon to your toolbar for easy access.
+   - Enjoy an ad-free web!
 
 ---
 
-## 📸 Screenshots
+## 🛠️ Technical Architecture
 
-<div align="center">
+ProBlock is built with performance and privacy as first principles.
 
-| Dashboard | Detected Ads | Settings |
-|:---------:|:------------:|:--------:|
-| Protection status & stats | Page scanner results | Custom rules |
-
-</div>
-
----
-
-## 🛠️ Technical Details
+| Component | Technology | Description |
+|-----------|------------|-------------|
+| **Core** | Manifest V3 | Uses the latest secure extension standard. |
+| **Blocking** | DeclarativeNetRequest | Blocks requests in the browser kernel, not JavaScript, for zero latency. |
+| **Logic** | Service Workers | Background processing that suspends when not in use to save RAM. |
+| **Storage** | Chrome Storage API | Persists user preferences and statistics securely. |
 
 ### Blocked Categories
-
-| Category | Examples | Count |
-|----------|----------|-------|
-| **Ad Networks** | Google Ads, DoubleClick, Criteo, Taboola | 40+ |
-| **Analytics** | Google Analytics, Hotjar, Mixpanel, Amplitude | 25+ |
-| **Social Tracking** | Facebook Pixel, LinkedIn Insight, TikTok | 15+ |
-| **Video Ads** | Teads, SpotX, IronSource | 10+ |
-| **Pop-ups** | PopAds, PropellerAds, Adsterra | 15+ |
-| **Other** | Push notifications, verification services | 15+ |
-
-### Technologies Used
-- **Manifest V3** - Latest Chrome extension standard
-- **DeclarativeNetRequest API** - Efficient network request blocking
-- **Content Scripts** - Page scanning capability
-- **Chrome Storage API** - Persistent settings
-
-### Permissions
-- `declarativeNetRequest` - Block network requests
-- `storage` - Save settings and statistics
-- `tabs` - Access current tab for scanning
-- `activeTab` - Interact with active page
-- `<all_urls>` - Block ads on all websites
+| Category | Examples |
+|----------|----------|
+| **Ad Networks** | DoubleClick, AdSense, Criteo, Taboola |
+| **Analytics** | Google Analytics, Hotjar, Mixpanel, Segment |
+| **Social Trackers** | Facebook Pixel, LinkedIn Insight, TikTok Ads |
+| **Intrusive Media** | Autoplay videos, Pop-ups, Pop-unders |
 
 ---
 
-## 📁 Project Structure
+## 🔒 Privacy & Security
 
-```
-ProBlock/
-├── manifest.json      # Extension configuration
-├── background.js      # Service worker (blocking logic)
-├── content.js         # Page scanner script
-├── popup.html         # Extension popup UI
-├── popup.js           # Popup interaction logic
-├── rules.json         # Static blocking rules (120+)
-├── icons/
-│   └── icon.png       # Extension icon
-└── README.md          # This file
-```
+**Your data stays on your device.**
+ProBlock operates entirely client-side. We do not collect browsing history, extensive usage data, or personal information.
+
+- **No External Servers**: All blocking logic happens locally within your browser.
+- **Open Source**: The code is transparent and available for audit.
+- **Permission Scoping**: We only request permissions necessary for blocking functionality (`tams`, `storage`, `declarativeNetRequest`).
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Here's how you can help:
+We welcome contributions from the community! Whether it's adding new blocking rules, fixing bugs, or improving the UI.
 
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/AmazingFeature`)
-3. **Commit** your changes (`git commit -m 'Add AmazingFeature'`)
-4. **Push** to the branch (`git push origin feature/AmazingFeature`)
-5. **Open** a Pull Request
-
-### Ideas for Contribution
-- Add more blocking rules
-- Improve page scanner detection
-- Add whitelist functionality
-- Localization support
-- Firefox/Edge compatibility
+1. **Fork** the repository.
+2. **Create** your feature branch (`git checkout -b feature/NewBlockingRule`).
+3. **Commit** your changes (`git commit -m 'Add rule for ExampleAds'`).
+4. **Push** to the branch (`git push origin feature/NewBlockingRule`).
+5. **Open** a Pull Request.
 
 ---
 
@@ -168,23 +127,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## 👤 Author
-
-**PrivyXe**
-
-- GitHub: [@PrivyXe](https://github.com/PrivyXe)
-
----
-
-## ⭐ Show Your Support
-
-If this project helped you, please give it a ⭐ on GitHub!
-
----
-
 <div align="center">
 
-**Made with ❤️ for a cleaner web experience**
+**ProBlock** — Making the internet habitable again.
+<br>
+Developed by [PrivyXe](https://github.com/PrivyXe)
 
 </div>
-
